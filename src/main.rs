@@ -2,7 +2,10 @@ pub mod actions;
 pub mod alias;
 pub mod store;
 
-use std::{env, process::Command};
+use std::{
+    env,
+    process::{exit, Command},
+};
 
 use crate::store::Store;
 use actions::Action;
@@ -66,11 +69,15 @@ fn main() {
 
             let command = store.get_command(alias);
 
-            println!("{}", command);
+            // println!("{}", command);
 
-            Command::new(command)
-                .output()
-                .expect("failed to execute process");
+            let handle = Command::new(command)
+                .spawn()
+                .expect("Failed to execute command");
+
+            handle.wait_with_output().expect("Failed to wait on child");
+
+            exit(0);
         }
     }
 }
