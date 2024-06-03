@@ -69,8 +69,6 @@ fn main() {
 
             let command = store.get_command(alias);
 
-            // println!("{}", command);
-
             let handle = Command::new(command)
                 .spawn()
                 .expect("Failed to execute command");
