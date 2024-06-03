@@ -1,9 +1,11 @@
+pub mod actions;
 pub mod alias;
 pub mod store;
 
 use std::{env, process::Command};
 
 use crate::store::Store;
+use actions::Action;
 use alias::Alias;
 
 extern crate dirs;
@@ -11,24 +13,17 @@ extern crate dirs;
 fn main() {
     let mut store = Store::new();
 
-    // let danlialias = Alias::new(String::from("test_key23"), String::from("test_command23"));
-
-    // danlialias.create(&mut cachorrimoso);
-
-    // println!("{:?}", cachorrimoso);
-
     let args: Vec<String> = env::args().collect();
 
     if args.len() < 1 {
         panic!("You need to use an action")
     }
 
-    let action = &args[1];
+    let action_argument = &args[1];
+    let action = Action::from_str(action_argument);
 
-    // println!("{}", action);
-
-    match action.as_str() {
-        "add" => {
+    match action {
+        Action::Add => {
             let arguments = &args[2..];
 
             let mut is_command = false;
@@ -64,7 +59,7 @@ fn main() {
 
             println!("Stored new alias {}", alias);
         }
-        "run" => {
+        Action::Run => {
             let arguments = &args[2..];
 
             let alias = arguments.join(" ");
@@ -77,6 +72,5 @@ fn main() {
                 .output()
                 .expect("failed to execute process");
         }
-        &_ => {}
     }
 }
