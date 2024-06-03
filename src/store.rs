@@ -43,6 +43,10 @@ impl Store {
         }
     }
 
+    pub fn get_command(&self, alias: String) -> &String {
+        return self.aliases.get(&alias).unwrap();
+    }
+
     pub fn save(&self) -> () {
         let content = serde_json::to_string(&self.aliases).unwrap();
 
